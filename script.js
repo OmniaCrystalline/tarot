@@ -140,12 +140,20 @@ function shuffleDeck(deck) {
   return shuffled;
 }
 
+// Перемішування колоди поза екраном (викликається перед створенням карт)
+function shuffleDeckOffScreen() {
+  shuffledDeck = shuffleDeck(tarotDeck);
+}
+
 // Створення карт на сторінці
 function createCards() {
   const container = document.getElementById("cards-container");
   container.innerHTML = "";
 
-  shuffledDeck = shuffleDeck(tarotDeck);
+  // Якщо колода ще не перемішана, перемішуємо її
+  if (shuffledDeck.length === 0) {
+    shuffleDeckOffScreen();
+  }
 
   // Розраховуємо оптимальний розмір карт з нахлестом, щоб всі 78 карт вмістилися
   const containerWidth = container.offsetWidth - 10; // Враховуємо padding
@@ -229,14 +237,20 @@ function selectCard(cardElement, cardName, index) {
   if (cardElement.classList.contains("selected")) {
     // Зняти вибір
     cardElement.classList.remove("selected");
-    selectedCards = selectedCards.filter((card) => card.index !== index);
+    selectedCards = selectedCards.filter((card) => card.name !== cardName);
     // Повертаємо початкове обертання (без перевернутості)
     const rot = cardElement.dataset.rotation;
     cardElement.style.transform = `rotate(${rot}deg)`;
     cardElement.classList.remove("reversed");
     cardElement.dataset.isReversed = "false";
   } else {
-    // Додати вибір - визначаємо перевернутість рандомно для цієї карти (невидимо для користувача)
+    // Перевірка: чи вже вибрана ця карта (за назвою) - блокуємо дублікати
+    const isAlreadySelected = selectedCards.some((card) => card.name === cardName);
+    if (isAlreadySelected) {
+      return; // Не дозволяємо вибрати ту саму карту двічі
+    }
+
+    // Додати вибір - визначаємо перевернутість рандомно тільки при виборі
     const isReversed = Math.random() < 0.5;
 
     cardElement.classList.add("selected");
@@ -320,6 +334,8 @@ function updateCardsState() {
 // Скидання вибору
 function resetSelection() {
   selectedCards = [];
+  // Перемішуємо колоду поза екраном перед новим розкладом
+  shuffleDeckOffScreen();
   createCards();
   updateSelectedCardsDisplay();
   updateSubmitButton();
@@ -498,6 +514,8 @@ ${question ? `\nПитання клієнта: ${question}` : ""}
 // Ініціалізація
 document.addEventListener("DOMContentLoaded", () => {
   setDailyWallpaper();
+  // Перемішуємо колоду поза екраном перед створенням карт
+  shuffleDeckOffScreen();
   createCards();
   updateSelectedCardsDisplay();
   loadModel();
@@ -515,19 +533,43 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      // Зберігаємо назви вибраних карт перед пересозданием
-      const savedCardNames = selectedCards.map((card) => card.name);
+      // Зберігаємо назви вибраних карт та їх перевернутість перед пересозданием
+      const savedCards = selectedCards.map((card) => ({
+        name: card.name,
+        reversed: card.reversed,
+      }));
+      // Очищаємо selectedCards перед відновленням
+      selectedCards = [];
+      // Не перемішуємо колоду при зміні розміру - зберігаємо поточну послідовність
       createCards();
-      // Відновлюємо вибрані карти за назвами
-      savedCardNames.forEach((cardName) => {
+      // Відновлюємо вибрані карти за назвами з їх перевернутістю
+      savedCards.forEach((savedCard) => {
         const cardElement = document.querySelector(
-          `[data-card-name="${cardName}"]`
+          `[data-card-name="${savedCard.name}"]`
         );
-        if (cardElement && selectedCards.length < 3) {
+        if (cardElement) {
           const index = parseInt(cardElement.dataset.cardIndex);
-          selectCard(cardElement, cardName, index);
+          // Відновлюємо вибір з збереженою перевернутістю
+          cardElement.classList.add("selected");
+          cardElement.dataset.isReversed = savedCard.reversed;
+          if (savedCard.reversed) {
+            cardElement.classList.add("reversed");
+          } else {
+            cardElement.classList.remove("reversed");
+          }
+          const rot = cardElement.dataset.rotation;
+          cardElement.style.transform = `translateY(-20px) scale(1.1) rotate(${rot}deg)`;
+          // Додаємо до selectedCards
+          selectedCards.push({
+            name: savedCard.name,
+            index: index,
+            reversed: savedCard.reversed,
+          });
         }
       });
+      updateSelectedCardsDisplay();
+      updateSubmitButton();
+      updateCardsState();
     }, 250);
   });
 });
