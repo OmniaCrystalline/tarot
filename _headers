@@ -1,3 +1,11 @@
+/tarot.webp
+  Content-Type: image/webp
+  Cache-Control: public, max-age=31536000
+
+/*.webp
+  Content-Type: image/webp
+  Cache-Control: public, max-age=31536000
+
 /img/*
   Content-Type: image/jpeg
   Cache-Control: public, max-age=31536000
