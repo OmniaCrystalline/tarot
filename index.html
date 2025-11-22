@@ -20,14 +20,14 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" id="og-url" content="https://tarot3.netlify.app/">
+    <meta property="og:url" id="og-url" content="./">
     <meta property="og:title" content="Таро Розклад Онлайн - Безкоштовний Розклад на 3 Картах">
     <meta property="og:description"
         content="Безкоштовний онлайн розклад таро на 3 картах з AI інтерпретацією. Виберіть карти та отримайте розшифровку вашого розкладу.">
-    <meta property="og:image" id="og-image" content="https://tarot3.netlify.app/tarot.webp">
-    <meta property="og:image:secure_url" content="https://tarot3.netlify.app/tarot.webp">
+    <meta property="og:image" id="og-image" content="./tarot.webp">
+    <meta property="og:image:secure_url" content="./tarot.webp">
     <meta property="og:image:type" content="image/webp">
-    <meta property="og:image:url" content="https://tarot3.netlify.app/tarot.webp">
+    <meta property="og:image:url" content="./tarot.webp">
     <meta property="og:image:width" content="600">
     <meta property="og:image:height" content="336">
     <meta property="og:image:alt" content="Таро Розклад Онлайн - Містичний фон з книгою заклинань">
@@ -36,18 +36,18 @@
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" id="twitter-url" content="https://tarot3.netlify.app/">
+    <meta property="twitter:url" id="twitter-url" content="./">
     <meta property="twitter:title" content="Таро Розклад Онлайн - Безкоштовний Розклад на 3 Картах">
     <meta property="twitter:description"
         content="Безкоштовний онлайн розклад таро на 3 картах з AI інтерпретацією. Виберіть карти та отримайте розшифровку вашого розкладу.">
-    <meta property="twitter:image" id="twitter-image" content="https://tarot3.netlify.app/tarot.webp">
+    <meta property="twitter:image" id="twitter-image" content="./tarot.webp">
 
     <!-- Additional image meta tags for better compatibility -->
-    <meta name="image" content="https://tarot3.netlify.app/tarot.webp">
-    <link rel="image_src" href="https://tarot3.netlify.app/tarot.webp">
+    <meta name="image" content="./tarot.webp">
+    <link rel="image_src" href="./tarot.webp">
 
     <!-- Canonical URL -->
-    <link rel="canonical" id="canonical-url" href="https://tarot3.netlify.app/">
+    <link rel="canonical" id="canonical-url" href="./">
 
     <!-- Favicon -->
     <link rel="icon" href="./witch-cat-svgrepo-com.svg" type="image/x-icon">
@@ -62,8 +62,8 @@
       "@type": "WebApplication",
       "name": "Таро Розклад Онлайн",
       "description": "Безкоштовний онлайн розклад таро на 3 картах з AI інтерпретацією",
-      "url": "https://tarot3.netlify.app/",
-      "image": "https://tarot3.netlify.app/tarot.webp",
+      "url": "./",
+      "image": "./tarot.webp",
       "applicationCategory": "EntertainmentApplication",
       "operatingSystem": "Web",
       "offers": {
@@ -164,53 +164,6 @@
     </div>
 
     <script src="script.js"></script>
-    <script>
-        // Автоматичне визначення домену для SEO мета-тегів
-        (function () {
-            const origin = window.location.origin;
-            const path = window.location.pathname;
-            const baseUrl = origin + path.replace(/\/[^\/]*$/, '/');
-
-            // Оновлення canonical URL
-            const canonical = document.getElementById('canonical-url');
-            if (canonical) {
-                canonical.href = baseUrl;
-            }
-
-            // Оновлення Open Graph URL
-            const ogUrl = document.getElementById('og-url');
-            if (ogUrl) {
-                ogUrl.content = baseUrl;
-            }
-
-            // Оновлення Twitter URL
-            const twitterUrl = document.getElementById('twitter-url');
-            if (twitterUrl) {
-                twitterUrl.content = baseUrl;
-            }
-
-            // Оновлення зображень (якщо потрібно абсолютний URL)
-            const ogImage = document.getElementById('og-image');
-            const twitterImage = document.getElementById('twitter-image');
-            if (ogImage && twitterImage) {
-                const imageUrl = baseUrl + 'tarot.webp';
-                ogImage.content = imageUrl;
-                twitterImage.content = imageUrl;
-            }
-
-            // Оновлення JSON-LD структурованих даних
-            const structuredData = document.getElementById('structured-data');
-            if (structuredData) {
-                try {
-                    const data = JSON.parse(structuredData.textContent);
-                    data.url = baseUrl;
-                    structuredData.textContent = JSON.stringify(data);
-                } catch (e) {
-                    console.error('Помилка оновлення структурованих даних:', e);
-                }
-            }
-        })();
-    </script>
 </body>
 
 </html>
